@@ -17,9 +17,9 @@ The main java source file contains UTF8 characters for those damned smart quotes
 
 If your "javac" compile fails with this error:
 
-    C:\Software\Wiki>javac Convert.java ConvertHTML.java
-    Convert.java: error: unmappable character for encoding Cp1252
-                       aQuote = thisLine.indexOf("???");
+	C:\Software\Wiki>javac Convert.java ConvertHTML.java
+	Convert.java: error: unmappable character for encoding Cp1252
+		aQuote = thisLine.indexOf("???");
 
 Then you must set the Env Var as above, either permanently in Control Panel -> System, or in the session itself as per the above command.
 
@@ -70,7 +70,7 @@ Norman @ Dunbar - it . co . uk  (You know the drill, remove the spaces.)
 - Images need to be saved from the Wiki Page with the same name as per the message(s) output to the log file (on standard error) or console. The Wiki insists on absolute paths to images, why not, but I prefer to have mine relative to the source HTML file, so that's how it is. By default images are expected to be in the _media subdirectory beneath where the converted HTML page is located.
 - Smilies. The Wiki keeps those in a different place. Check the output messages to find where you need to put yours, if you can be bothered! I personally, can't be! (Bothered.)
 - Other media files - I have no idea, I don't use them!
-- If future versions of DokuWiki change the end of section comments, we could be up that famous creek, without a canoe, never mind a paddle!
+- If future versions of DokuWiki change the end of section comments, we could be up that famous creek, without a canoe, never mind a paddle! If they do, let me know and I'll fix it.
 - There is no CSS extracted. All the class names, ID names etc remain in the converted HTML. This MIGHT be useful, perhaps.
 - External links remain as external links. This means, they still work!
 - Internal (to other Wiki pages I mean) will most likely no longer work.
@@ -103,25 +103,25 @@ This is only my third ever Java program, and Java doesn't do efficient. :-)
 
 Assuming you have a Java development environment set up, it's a simple case of:
 
-    cd DokuWiki-Cleaner
-    javac Convert.java
+	cd DokuWiki-Cleaner
+	javac Convert.java
 
 Or, on Windows:
 
-    cd DokuWiki-Cleaner
-    set JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8"
-    javac Convert.java
+	cd DokuWiki-Cleaner
+	set JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8"
+	javac Convert.java
 
 
 # TESTING
 
 There is a sample HTML file taken from my own website. The file, if you are interested, describes the hard disc format for a Sinclair QL hard disc. To convert it, proceed as follows:
 
-    java Convert test.html >test.out.html 
+	java Convert test.html >test.out.html 
 
 or
 
-    java Convert test.html >test.out.html  2>test.html.log
+	java Convert test.html >test.out.html  2>test.html.log
 
 In the former case, informational messages will scroll up the screen, while in the latter case, they will be written to the file test.html.log - from where you can examine them to see if any images etc need to be dealt with.
 
@@ -129,17 +129,17 @@ There are two "LOL" images :-) in the original file, but these are not supplied.
 
 You should see something like the following:
 
-    java Convert test.html >test.out.html
+	java Convert test.html >test.out.html
 
-    Reading: test.html...
-    Looking for the "</title>" tag....
-    Found it at line 7.
-    Deleting down to "<!-- TOC END -->"
-    Finished deleting at line 80.
-    Copying down to "<!-- wikipage stop -->"....
-    Found <img> tag at line 778, column 285
-    	The image file is "lib/images/smileys/icon_lol.gif"
-    Found <img> tag at line 1024, column 166
-    	The image file is "lib/images/smileys/icon_lol.gif"
-    Finished copying at line 1130.
+	Reading: test.html...
+	Looking for the "</title>" tag....
+	Found it at line 7.
+	Deleting down to "<!-- TOC END -->"
+	Finished deleting at line 80.
+	Copying down to "<!-- wikipage stop -->"....
+	Found <img> tag at line 778, column 285
+		The image file is "lib/images/smileys/icon_lol.gif"
+	Found <img> tag at line 1024, column 166
+		The image file is "lib/images/smileys/icon_lol.gif"
+	Finished copying at line 1130.
 
