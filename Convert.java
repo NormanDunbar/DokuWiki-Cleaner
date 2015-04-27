@@ -10,7 +10,7 @@
 // which strangely, Microsoft insist on using in Word etc, but their system
 // runs in CP1252 by default!
 //
-// If your "javac" compile fails with this error:
+// If your "javac *.java" compile fails with this error:
 //
 //      C:\Software\Wiki>javac Convert.java
 //      Convert.java: error: unmappable character for encoding Cp1252
@@ -34,9 +34,27 @@
 //----------------------------------------------------------------------------
 // L I C E N C E:
 //----------------------------------------------------------------------------
-// Lets say it's Public Domain. Free for use and abuse as you see fit, with no
-// warranty implied or expressed. Use (and abuse) at your own risk, after all
-// what could possibly go wrong?
+// The MIT License (MIT)
+// 
+// Copyright (c) 2015 Norman Dunbar
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
@@ -108,176 +126,8 @@ import java.io.*;
 
 public class Convert {
 
-    public static void main(String[] args) throws Exception 
-    {
-      
-        String  thisLine = null;        // A line of HTML from the input file.
-        String  tempLine = null;        // Temp buffer to extract image file names.
-        String  imgFile = null;         // Image file name.
-        int     lineNumber = 0;         // Which line am I on?
-
-        try
-        {
-
-            //---------------------------------------------------------------------------
-            // So, I want to open a text file that's in UTF8 format, how hard can it be?
-            // This hard ...
-            //---------------------------------------------------------------------------
-            BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(args[0]), "UTF8")
-            );
-
-
-            //---------------------------------------------------------------------------
-            // Scan until we reach the <body> tag. Write out each line as we go.
-            //---------------------------------------------------------------------------
-            System.err.println("Reading: " + args[0] + "...");
-            System.err.println("Looking for the \"</title>\" tag....");
-            while ((thisLine = br.readLine()) != null) {
-                lineNumber++;
-    
-                //---------------------------------------------------------------------------
-                // Write out this line, and check if we are finished copying the header stuff.
-                //---------------------------------------------------------------------------
-                System.out.println(thisLine);
-                if (thisLine.trim().indexOf("</title") > -1) {
-                    System.err.println("Found it at line " + lineNumber + ".");
-                    break;
-                }
-            }
-
-            System.out.println("</head>");
-            System.out.println("<body>");
-
-            
-            //---------------------------------------------------------------------------
-            // We are in the <body>.
-            // Ignore everything until we reach the <!-- TOC END --> line. 
-            //---------------------------------------------------------------------------
-            System.err.println("Deleting down to \"<!-- TOC END -->\"");
-
-            while ((thisLine = br.readLine()) != null) {
-                lineNumber++;
-                if (thisLine.trim().startsWith("<!-- TOC END")) {
-                    // Not done yet, ignore this line.
-                    break;
-                }
-
-            }
-
-            System.err.println("Finished deleting at line " + lineNumber + ".");
-
-            //---------------------------------------------------------------------------
-            // Now we can copy the meat & gravy of the information to the output file!
-            //---------------------------------------------------------------------------
-            System.err.println("Copying down to \"<!-- wikipage stop -->\"....");
-
-            while ((thisLine = br.readLine()) != null) {
-                lineNumber++;
-
-                //---------------------------------------------------------------------------
-                // Remove those "edit" buttons...
-                //---------------------------------------------------------------------------
-                if (thisLine.trim().startsWith("<div class=\"secedit\"")) {
-                    continue;
-                }
-
-
-                //---------------------------------------------------------------------------
-                // Warn if we find an image.
-                //---------------------------------------------------------------------------
-                int imgTag = thisLine.indexOf("<img ");
-                if (imgTag > -1) {
-                    //-----------------------------------------------------------------------
-                    // We have an image. Find the source...
-                    //-----------------------------------------------------------------------
-                    System.err.println("Found <img> tag at line " + 
-                                        lineNumber + ", column " + imgTag);
-
-                    //-----------------------------------------------------------------------
-                    // We are doing it this way because there might be more than one
-                    // src= or class= in the line. We are only interested in those we
-                    // see AFTER the initial <img tag. Trust me, not all <img tags are
-                    // the same.
-                    //-----------------------------------------------------------------------
-                    tempLine = thisLine;
-    
-                    int srcTag = tempLine.substring(imgTag).indexOf("src=\"");
-                    if (srcTag > -1) {
-                        srcTag += imgTag;
-                        int classTag = tempLine.substring(srcTag).indexOf("class=");
-                        if (classTag > -1) {
-                            // Extract the filename...
-                            classTag += srcTag;
-
-                            //---------------------------------------------------------------
-                            // Trim off the leading slash from the image path. It's causing
-                            // the resulting HTML to be absolute path, we want relative paths
-                            // to images now.
-                            //---------------------------------------------------------------
-                            imgFile = "\"" + tempLine.substring(srcTag + 6, classTag).trim();
-
-                            //---------------------------------------------------------------
-                            // Now, change the line we write out to use relative paths.
-                            //---------------------------------------------------------------
-                            thisLine = thisLine.substring(0, srcTag) +
-                                       "src=" + imgFile + " " +
-                                       thisLine.substring(classTag) ;
-                        }
-                        //-------------------------------------------------------------------
-                        // And inform the user about it.
-                        //-------------------------------------------------------------------
-                        System.err.println("\tThe image file is " + imgFile);
-
-                        //-------------------------------------------------------------------
-                        // And write a suitable comment to the output HTML file.
-                        //-------------------------------------------------------------------
-                        System.out.println("<!-- I M A G E   F I L E   " + imgFile + 
-                                            "   R E Q U I R E D   H E R E -->");
-                    } else {
-                        //-------------------------------------------------------------------
-                        // How strange, an image tag with no src attribute.
-                        //-------------------------------------------------------------------
-                        System.err.println("\tThe image file has no src attribute!");
-                    }
-                }
-                
-
-                //---------------------------------------------------------------------------
-                // Check if we are done yet?
-                //---------------------------------------------------------------------------
-                if (thisLine.trim().startsWith("<!-- wikipage stop")) {
-                    break;
-                }
-
-                //---------------------------------------------------------------------------
-                // Not done yet, copy this line out. However, we need to remove
-                // the Wiki's insistence on using so called "smart" quotes. These
-                // appear as a single character, but are actually three!
-                //---------------------------------------------------------------------------
-                int aQuote = thisLine.indexOf("“");  // E2 80 9C
-                if (aQuote > -1) {
-                    thisLine = thisLine.substring(0, aQuote) +
-                               "&quot;" +
-                                thisLine.substring(aQuote + 1);
-                }
-                
-                aQuote = thisLine.indexOf("”");  // E2 80 9D
-                if (aQuote > -1) {
-                    thisLine = thisLine.substring(0, aQuote) +
-                               "&quot;" +
-                                thisLine.substring(aQuote + 1);
-                }
-                System.out.println(thisLine);
-            }
-
-            System.err.println("Finished copying at line " + lineNumber + ".");
-
-            System.out.println("</body>");
-            System.out.println("</html>");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception  {
+        ConvertHTML cv = new ConvertHTML();
+        cv.jfdi(args[0]);
     }
 }

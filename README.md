@@ -17,13 +17,13 @@ The main java source file contains UTF8 characters for those damned smart quotes
 
 If your "javac" compile fails with this error:
 
-    C:\Software\Wiki>javac Convert.java
+    C:\Software\Wiki>javac Convert.java ConvertHTML.java
     Convert.java: error: unmappable character for encoding Cp1252
                        aQuote = thisLine.indexOf("???");
 
 Then you must set the Env Var as above, either permanently in Control Panel -> System, or in the session itself as per the above command.
 
-It's possible that Java 1.6 (Java 6) will not compile this file. I haven't tested it to see, I only have Java 1.7 (aka 7).
+It's possible that Java 1.6 (Java 6) will not compile this file. I haven't tested it to see, I only have Java 1.7 (aka Java 7).
 
 
 # USAGE
