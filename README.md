@@ -4,7 +4,7 @@ Cleans up the HTML created when you save a DokuWiki generated page from the brow
 
 Converts a DokuWiki page, saved from the browser as HTML source, to get rid of the crud, and hopefully, extract the relevant information. 
 
-The HTML input file should have been saved from the browser using the "view source" feature and the resulting source saved as an HTML file. It can then be stuffed through this abysmal piece of Java code to extract the wheat the chaff. 
+The HTML input file should have been saved from the browser using the "view source" feature and the resulting source saved as an HTML file. It can then be stuffed through this abysmal piece of Java code to extract the wheat from the chaff. 
 
 
 # WARNING
@@ -81,15 +81,15 @@ Norman @ Dunbar - it . co . uk  (You know the drill, remove the spaces.)
 
 # BRIEF DESCRIPTION
 
-Open the passed file for reading in UTF8 mode.
-Scan through it, writing to System.out until we find <\title>.
-Write out ```</head>``` and ```<body>``` tags.
-Keep scanning but ignore everything until we reach ```"<!-- TOC END -->"```.
-Keep scanning and write everything out until we hit ```"<!-- wikipage stop -->"```.
-Advise the user if any image files are required.
-Convert any damned "smart" quotes (E2809C and E2809D) to ```&quot;```.
-Close the```<body>``` and ```<html>``` tags.
-Done.
+- Open the passed file for reading in UTF8 mode.
+- Scan through it, writing to System.out until we find <\title>.
+- Write out ```</head>``` and ```<body>``` tags.
+- Keep scanning but ignore everything until we reach ```"<!-- TOC END -->"```.
+- Keep scanning and write everything out until we hit ```"<!-- wikipage stop -->"```.
+- Advise the user if any image files are required.
+- Convert any damned "smart" quotes (E2809C and E2809D) to ```&quot;```.
+- Close the```<body>``` and ```<html>``` tags.
+- Done.
 
 
 
