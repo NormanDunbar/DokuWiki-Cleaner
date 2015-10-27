@@ -91,7 +91,16 @@ public class ConvertHTML {
     // Globals - sometimes are necessary!
     int     lineNumber = 0;         // Which line am I on?
     String  thisLine = null;        // A line of HTML from the input file.
+    
+    private void errMsg(String message) throws Exception {
+        // Writes a message to System.err.
+        System.err.println(message);
+    }
 
+    private void outMsg(String message) throws Exception {
+        // Writes a message to System.out.
+        System.out.println(message);
+    }
 
     public boolean writeUntilWeFind(BufferedReader br, String lookFor)  throws Exception {
         // Reads & writes lines until we find one that INCLUDES the
@@ -100,15 +109,15 @@ public class ConvertHTML {
         while ((thisLine = br.readLine()) != null) {
             lineNumber++;
 
-            System.out.println(thisLine);
-            if (thisLine.trim().indexOf(lookFor) > -1) {
-                System.err.println("Found it at line " + lineNumber + ".");
+            outMsg(thisLine);
+            if (thisLine.trim().contains(lookFor)) {
+                errMsg("Found it at line " + lineNumber + ".");
                 return true;
             }
         }
         
         // Oops, we didn't find what we came here for.
-        System.err.println("ERROR: Cannot find \"" + lookFor + "\".");
+        errMsg("ERROR: Cannot find \"" + lookFor + "\".");
         return false;
     }
     
@@ -121,13 +130,13 @@ public class ConvertHTML {
             lineNumber++;
             if (thisLine.trim().startsWith(lookFor)) {
                 // We are done.
-                System.err.println("Finished deleting at line " + lineNumber + ".");
+                errMsg("Finished deleting at line " + lineNumber + ".");
                 return true;
             }
         }
 
         // Oops, we didn't find what we came here for.
-        System.err.println("ERROR: Cannot find \"" + lookFor + "\".");
+        errMsg("ERROR: Cannot find \"" + lookFor + "\".");
         return false;
     }
     
@@ -140,7 +149,7 @@ public class ConvertHTML {
         // with logging messages on System.err.
         //=================================================================
 
-        String  tempLine = null;        // Temp buffer to extract image file names.
+        String  tempLine;               // Temp buffer to extract image file names.
         String  imgFile = null;         // Image file name.
 
         try
@@ -158,40 +167,40 @@ public class ConvertHTML {
             //---------------------------------------------------------------------------
             // Scan until we reach the </title> tag. Write out each line as we go.
             //---------------------------------------------------------------------------
-            System.err.println("Reading: " + fileName + "...");
-            System.err.println("Looking for the \"</title>\" tag....");
+            errMsg("Reading: " + fileName + "...");
+            errMsg("Looking for the \"</title>\" tag....");
 
-            if (writeUntilWeFind(br, "</title") == false) { 
-                System.err.println("Cannot continue.");
+            if (!writeUntilWeFind(br, "</title")) {
+                errMsg("Cannot continue.");
                 return false;
-            };
+            }
 
-            System.out.println("</head>");
-            System.out.println("<!--\n" +
-                               "     File tidied up using \"DokuWiki-Cleaner\" utility\n" +
-                               "     which strips out the cruft we don't need in a saved\n" +
-                               "     DokuWiki HTML file.\n");
-            System.out.println("     Did I mention? It's on GitHub at \n" +
-                               "     https://github.com/NormanDunbar/DokuWiki-Cleaner \n" +
-                               "-->");
-            System.out.println("<body>");
+            outMsg("</head>");
+            outMsg("<!--\n" +
+                    "     File tidied up using \"DokuWiki-Cleaner\" utility\n" +
+                    "     which strips out the cruft we don't need in a saved\n" +
+                    "     DokuWiki HTML file.\n");
+            outMsg("     Did I mention? It's on GitHub at \n" +
+                    "     https://github.com/NormanDunbar/DokuWiki-Cleaner \n" +
+                    "-->");
+            outMsg("<body>");
 
             
             //---------------------------------------------------------------------------
             // We are in the <body>.
             // Ignore everything until we reach the <!-- TOC END --> line. 
             //---------------------------------------------------------------------------
-            System.err.println("Deleting down to \"<!-- TOC END -->\"");
+            errMsg("Deleting down to \"<!-- TOC END -->\"");
 
-            if (readUntilWeFind(br, "<!-- TOC END") == false) {
-                System.err.println("Cannot continue.");
+            if (!readUntilWeFind(br, "<!-- TOC END")) {
+                errMsg("Cannot continue.");
                 return false;
-                };
+                }
 
             //---------------------------------------------------------------------------
             // Now we can copy the meat & gravy of the information to the output file!
             //---------------------------------------------------------------------------
-            System.err.println("Copying down to \"<!-- wikipage stop -->\"....");
+            errMsg("Copying down to \"<!-- wikipage stop -->\"....");
 
             while ((thisLine = br.readLine()) != null) {
                 lineNumber++;
@@ -212,8 +221,8 @@ public class ConvertHTML {
                     //-----------------------------------------------------------------------
                     // We have an image. Find the source...
                     //-----------------------------------------------------------------------
-                    System.err.println("Found <img> tag at line " + 
-                                        lineNumber + ", column " + imgTag);
+                    errMsg("Found <img> tag at line " +
+                            lineNumber + ", column " + imgTag);
 
                     //-----------------------------------------------------------------------
                     // We are doing it this way because there might be more than one
@@ -250,13 +259,13 @@ public class ConvertHTML {
                         //-------------------------------------------------------------------
                         // And inform the user about it.
                         //-------------------------------------------------------------------
-                        System.err.println("\tThe image file is " + imgFile);
+                        errMsg("\tThe image file is " + imgFile);
 
                         //-------------------------------------------------------------------
                         // And write a suitable comment to the output HTML file.
                         //-------------------------------------------------------------------
-                        System.out.println("<!-- I M A G E   F I L E   " + imgFile + 
-                                            "   R E Q U I R E D   H E R E -->");
+                        outMsg("<!-- I M A G E   F I L E   " + imgFile +
+                                "   R E Q U I R E D   H E R E -->");
 
                         //-------------------------------------------------------------------
                         // Now, does the line with the image begin with an <a> tag? If so, 
@@ -270,7 +279,7 @@ public class ConvertHTML {
                         //-------------------------------------------------------------------
                         // How strange, an image tag with no src attribute.
                         //-------------------------------------------------------------------
-                        System.err.println("\tThe image file has no src attribute!");
+                        errMsg("\tThe image file has no src attribute!");
                     }
                 }
                 
@@ -300,16 +309,16 @@ public class ConvertHTML {
                                "&quot;" +
                                 thisLine.substring(aQuote + 1);
                 }
-                System.out.println(thisLine);
+                outMsg(thisLine);
             }
 
-            System.err.println("Finished copying at line " + lineNumber + ".");
+            errMsg("Finished copying at line " + lineNumber + ".");
 
-            System.out.println("\n<!--\n    Page created from DokuWiki HTML by DokuWiki-Cleaner on : " +
-                               new Date().toString() + "\n-->" );
+            outMsg("\n<!--\n    Page created from DokuWiki HTML by DokuWiki-Cleaner on : " +
+                    new Date().toString() + "\n-->" );
 
-            System.out.println("</body>");
-            System.out.println("</html>");
+            outMsg("</body>");
+            outMsg("</html>");
 
         } catch (Exception e) {
             // Looks like something went belly up!

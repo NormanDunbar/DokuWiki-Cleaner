@@ -1,0 +1,6 @@
+DokuWiki-Cleaner.iml
+out/*
+*.swp
+*.class
+.idea/*
+

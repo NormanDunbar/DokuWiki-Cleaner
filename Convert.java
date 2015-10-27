@@ -127,7 +127,30 @@ import java.io.*;
 public class Convert {
 
     public static void main(String[] args) throws Exception  {
-        ConvertHTML cv = new ConvertHTML();
-        cv.jfdi(args[0]);
+        // Must have at least one argument on the command line.
+        if (args.length > 0) {
+            ConvertHTML cv = new ConvertHTML();
+            if (cv.jfdi(args[0])) {
+                // No problems.
+                System.exit(0);
+            } else {
+                // Oops!
+                System.exit(1);
+            };
+        } else {
+            usage();
+            System.exit(1);
+        }
+    }
+
+    private static void usage() {
+        // Display program usage, funnily enough!
+        System.err.println(
+                "ERROR: No parameters supplied!\n\n" +
+                "USAGE:\n" +
+                "======\n\n" +
+                "java Convert " +
+                "input_html_file >output_html_file\n"
+        );
     }
 }
