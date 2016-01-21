@@ -1,0 +1,30 @@
+<h1 id="dokuwiki-cleaner">DokuWiki-Cleaner</h1>
+<p>Cleans up the HTML created when you save a DokuWiki generated page from the browser.</p>
+<p>Converts a DokuWiki page, saved from the browser as HTML source, to get rid of the crud, and hopefully, extract the relevant information.</p>
+<p>The HTML input file should have been saved from the browser using the &quot;view source&quot; feature and the resulting source saved as an HTML file. It can then be stuffed through this abysmal piece of Java code to extract the wheat from the chaff.</p>
+<h1 id="updates">Updates</h1>
+<p><strong>21 January 2016</strong></p>
+<ul>
+<li>Added UPDATES.html to the repository. There always was an UPDATES.md, just not an html version.</li>
+<li>The README.html instructions somehow missed out the section on how to compile. That has been added.</li>
+<li>The usage instructions were a pile of poo! They said to run the <code>Convert.java</code> file. Rubbish, you don't run a java source file!</li>
+</ul>
+<p><strong>27 October 2015</strong></p>
+<ul>
+<li>More refactoring of the ConvertHTML class.</li>
+<li>Convert itself needed to check that parameters were passed.</li>
+<li>Now System.exit(0) if all ok, else System.exit(1).</li>
+</ul>
+<p><strong>27 April 2015</strong></p>
+<ul>
+<li>Updated to refactor the main code.</li>
+<li>Added some common routines.</li>
+<li>Added new source file ConverHTML.java.</li>
+<li>A few spelling mistakes were fixed.</li>
+<li>Images are no longer still embedded in <code>&lt;a&gt;</code> tags and thus, no longer attempt to act as links to a non-existent URL/URI.</li>
+<li>Updated README.md with new improved compiling instructions.</li>
+</ul>
+<p><strong>17 April 2015</strong></p>
+<ul>
+<li>Initial Version.</li>
+</ul>

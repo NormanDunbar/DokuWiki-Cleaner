@@ -25,13 +25,24 @@ Then you must set the Env Var as above, either permanently in Control Panel -> S
 
 It's possible that Java 1.6 (Java 6) will not compile this file. I haven't tested it to see, I only have Java 1.7 (aka Java 7).
 
+#COMPILING
+To compile this useful utility, all you have to do is:
 
-# USAGE
+	cd /where/the/source/files/are
+	javac *.java
 
-	java Convert.java File_name.html > output.filename.html
+When you get the prompt back, you should find the following two class files:
+
+	ls *.class
+	Convert.class  ConvertHTML.class
+
+
+#USAGE
+
+	java Convert File_name.html > output.filename.html
 or
 
-	java Convert.java File_name.html > output.filename.html 2>filename.log
+	java Convert File_name.html > output.filename.html 2>filename.log
 
 
 # LICENCE

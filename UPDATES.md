@@ -9,6 +9,12 @@ The HTML input file should have been saved from the browser using the "view sour
 
 # Updates
 
+**21 January 2016**
+
+- Added UPDATES.html to the repository. There always was an UPDATES.md, just not an html version.
+- The README.html instructions somehow missed out the section on how to compile. That has been added.
+- The usage instructions were a pile of poo! They said to run the `Convert.java` file. Rubbish, you don't run a java source file!
+
 **27 October 2015**
 
 - More refactoring of the ConvertHTML class.

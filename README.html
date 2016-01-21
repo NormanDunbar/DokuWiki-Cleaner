@@ -1,0 +1,88 @@
+<h1 id="dokuwiki-cleaner">DokuWiki-Cleaner</h1>
+<p>Cleans up the HTML created when you save a DokuWiki generated page from the browser.</p>
+<p>Converts a DokuWiki page, saved from the browser as HTML source, to get rid of the crud, and hopefully, extract the relevant information.</p>
+<p>The HTML input file should have been saved from the browser using the &quot;view source&quot; feature and the resulting source saved as an HTML file. It can then be stuffed through this abysmal piece of Java code to extract the wheat from the chaff.</p>
+<h1 id="warning">WARNING</h1>
+<p>In order to compile this file on Windows, you will need the following environment variable creating:</p>
+<pre><code>set JAVA_TOOL_OPTIONS=&quot;-Dfile.encoding=UTF8&quot;</code></pre>
+<p>The main java source file contains UTF8 characters for those damned smart quotes, which strangely, Microsoft insist on using in Word etc, but their system runs in CP1252 by default!</p>
+<p>If your &quot;javac&quot; compile fails with this error:</p>
+<pre><code>C:\Software\Wiki&gt;javac Convert.java ConvertHTML.java
+Convert.java: error: unmappable character for encoding Cp1252
+    aQuote = thisLine.indexOf(&quot;???&quot;);</code></pre>
+<p>Then you must set the Env Var as above, either permanently in Control Panel -&gt; System, or in the session itself as per the above command.</p>
+<p>It's possible that Java 1.6 (Java 6) will not compile this file. I haven't tested it to see, I only have Java 1.7 (aka Java 7).</p>
+<h1 id="compiling">COMPILING</h1>
+<p>To compile this useful utility, all you have to do is:</p>
+<pre><code>cd /where/the/source/files/are
+javac *.java</code></pre>
+<p>When you get the prompt back, you should find the following two class files:</p>
+<pre><code>ls *.class
+Convert.class  ConvertHTML.class</code></pre>
+<h1 id="usage">USAGE</h1>
+<pre><code>java Convert File_name.html &gt; output.filename.html</code></pre>
+<p>or</p>
+<pre><code>java Convert File_name.html &gt; output.filename.html 2&gt;filename.log</code></pre>
+<h1 id="licence">LICENCE</h1>
+<p>MIT Licence. See LICENSE file in the source code:</p>
+<p>Copyright (c) 2015 Norman Dunbar</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<h1 id="author">AUTHOR</h1>
+<p>Norman @ Dunbar - it . co . uk (You know the drill, remove the spaces.)</p>
+<h1 id="caveats">CAVEATS</h1>
+<ul>
+<li>Images need to be saved from the Wiki Page with the same name as per the message(s) output to the log file (on standard error) or console. The Wiki insists on absolute paths to images, why not, but I prefer to have mine relative to the source HTML file, so that's how it is. By default images are expected to be in the _media subdirectory beneath where the converted HTML page is located.</li>
+<li>Smilies. The Wiki keeps those in a different place. Check the output messages to find where you need to put yours, if you can be bothered! I personally, can't be! (Bothered.)</li>
+<li>Other media files - I have no idea, I don't use them!</li>
+<li>If future versions of DokuWiki change the end of section comments, we could be up that famous creek, without a canoe, never mind a paddle! If they do, let me know and I'll fix it.</li>
+<li>There is no CSS extracted. All the class names, ID names etc remain in the converted HTML. This MIGHT be useful, perhaps.</li>
+<li>External links remain as external links. This means, they still work!</li>
+<li>Internal (to other Wiki pages I mean) will most likely no longer work.</li>
+<li>Older versions of DokuWiki didn't always put a class on &lt;img tags. Sigh. In these cases, you will still get advised, but the filename will be &quot;null&quot;, but you can always check it and see what is expected.<br /></li>
+<li>Also, those older versions didn't use URLs for some images, they used a &quot;fetch.php&quot; function call to get the image. Another sigh.</li>
+</ul>
+<h1 id="brief-description">BRIEF DESCRIPTION</h1>
+<ul>
+<li>Open the passed file for reading in UTF8 mode.</li>
+<li>Scan through it, writing to System.out until we find &lt;.</li>
+<li>Write out <code>&lt;/head&gt;</code> and <code>&lt;body&gt;</code> tags.</li>
+<li>Keep scanning but ignore everything until we reach <code>&quot;&lt;!-- TOC END --&gt;&quot;</code>.</li>
+<li>Keep scanning and write everything out until we hit <code>&quot;&lt;!-- wikipage stop --&gt;&quot;</code>.</li>
+<li>Advise the user if any image files are required.</li>
+<li>Convert any damned &quot;smart&quot; quotes (E2809C and E2809D) to <code>&amp;quot;</code>.</li>
+<li>Close the<code>&lt;body&gt;</code> and <code>&lt;html&gt;</code> tags.</li>
+<li>Done.</li>
+</ul>
+<h1 id="by-the-way">BY THE WAY</h1>
+<p>I <em>never</em> said this would be the world's most efficient Java code, did I? This is only my third ever Java program, and Java doesn't do efficient. :-)</p>
+<h1 id="compiling-1">COMPILING</h1>
+<p>Assuming you have a Java development environment set up, it's a simple case of:</p>
+<pre><code>cd DokuWiki-Cleaner
+javac Convert.java</code></pre>
+<p>Or, on Windows:</p>
+<pre><code>cd DokuWiki-Cleaner
+set JAVA_TOOL_OPTIONS=&quot;-Dfile.encoding=UTF8&quot;
+javac Convert.java</code></pre>
+<h1 id="testing">TESTING</h1>
+<p>There is a sample HTML file taken from my own website. The file, if you are interested, describes the hard disc format for a Sinclair QL hard disc. To convert it, proceed as follows:</p>
+<pre><code>java Convert test.html &gt;test.out.html </code></pre>
+<p>or</p>
+<pre><code>java Convert test.html &gt;test.out.html  2&gt;test.html.log</code></pre>
+<p>In the former case, informational messages will scroll up the screen, while in the latter case, they will be written to the file test.html.log - from where you can examine them to see if any images etc need to be dealt with.</p>
+<p>There are two &quot;LOL&quot; images :-) in the original file, but these are not supplied. They can be edited out of the generated code at the line numbers indicated.</p>
+<p>You should see something like the following:</p>
+<pre><code>java Convert test.html &gt;test.out.html
+
+Reading: test.html...
+Looking for the &quot;&lt;/title&gt;&quot; tag....
+Found it at line 7.
+Deleting down to &quot;&lt;!-- TOC END --&gt;&quot;
+Finished deleting at line 80.
+Copying down to &quot;&lt;!-- wikipage stop --&gt;&quot;....
+Found &lt;img&gt; tag at line 778, column 285
+    The image file is &quot;lib/images/smileys/icon_lol.gif&quot;
+Found &lt;img&gt; tag at line 1024, column 166
+    The image file is &quot;lib/images/smileys/icon_lol.gif&quot;
+Finished copying at line 1130.</code></pre>
